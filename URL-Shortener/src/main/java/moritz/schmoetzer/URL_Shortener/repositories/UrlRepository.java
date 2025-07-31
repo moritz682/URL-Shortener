@@ -15,4 +15,8 @@ public interface UrlRepository extends CrudRepository<Url, Long> {
     @Modifying
     @Query("UPDATE urls SET access_count = access_count + 1 WHERE short_code = :shortCode")
     void incrementAccessCount(String shortCode);
+
+    @Modifying
+    @Query("UPDATE urls SET url = :url WHERE short_code = :shortCode")
+    void updateUrlByShortCode(String shortCode, String url);
 }

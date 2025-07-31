@@ -18,7 +18,7 @@ public class UrlService {
         this.urlRepository = urlRepository;
     }
 
-    public Url createNewShortURL(String url) throws Exception{
+    public Url createNewShortURL(String url){
         String shortCode;
         while (true){
             shortCode = UUID.randomUUID().toString().substring(0,6); // shortCode is limited to 6 chars
@@ -44,5 +44,9 @@ public class UrlService {
         urlRepository.incrementAccessCount(shortCode); // Increment access-count of url
 
         return url;
+    }
+
+    public void updateUrl(String shortCode, String url){
+        urlRepository.updateUrlByShortCode(shortCode, url);
     }
 }
