@@ -89,4 +89,19 @@ public class UrlController {
                     .body("404 - Not found\nThe requested URL does not exist!");
         }
     }
+
+    @GetMapping("/{shortCode}")
+    public void redirectURL(@PathVariable String shortCode, HttpServletResponse response){
+        Url url = urlService.getUrl(shortCode, true);
+        try {
+            if (url != null){
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.sendRedirect(url.getUrl());
+            } else{
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            }
+        } catch (Exception e){
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
 }
