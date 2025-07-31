@@ -39,15 +39,18 @@ public class UrlService {
         return urlEntity;
     }
 
-    public Url getUrl(String shortCode){
+    public Url getUrl(String shortCode, boolean increment){
         Url url = urlRepository.findUrlByShortCode(shortCode); // Retrieve url from short-code from DB
-        urlRepository.incrementAccessCount(shortCode); // Increment access-count of url
+
+        if(increment){
+            urlRepository.incrementAccessCount(shortCode); // Increment access-count of url
+        }
 
         return url;
     }
 
     public void updateUrl(String shortCode, String url){
-        urlRepository.updateUrlByShortCode(shortCode, url);
+        urlRepository.updateUrlByShortCode(shortCode, Timestamp.valueOf(LocalDateTime.now()), url);
     }
 
     public void deleteUrl(String shortCode){

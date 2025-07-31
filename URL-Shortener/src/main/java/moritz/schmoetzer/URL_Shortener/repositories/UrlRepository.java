@@ -6,6 +6,8 @@ import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
+
 @Repository
 public interface UrlRepository extends CrudRepository<Url, Long> {
 
@@ -17,8 +19,8 @@ public interface UrlRepository extends CrudRepository<Url, Long> {
     void incrementAccessCount(String shortCode);
 
     @Modifying
-    @Query("UPDATE urls SET url = :url WHERE short_code = :shortCode")
-    void updateUrlByShortCode(String shortCode, String url);
+    @Query("UPDATE urls SET url = :url, updated_at = :timestamp  WHERE short_code = :shortCode")
+    void updateUrlByShortCode(String shortCode, Timestamp timestamp, String url);
 
     @Modifying
     @Query("DELETE FROM urls WHERE short_code = :shortCode")

@@ -34,7 +34,7 @@ public class UrlController {
 
     @GetMapping("/shorten/{shortCode}") // READ
     public ResponseEntity getURL(@PathVariable String shortCode){
-        Url url = urlService.getUrl(shortCode);
+        Url url = urlService.getUrl(shortCode, true);
         if (url != null){
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -48,12 +48,12 @@ public class UrlController {
 
     @PutMapping("/shorten/{shortCode}") // UPDATE
     public ResponseEntity updateURL(@PathVariable String shortCode, @RequestBody UrlInputDTO url){
-        if (urlService.getUrl(shortCode) != null){ // Check if the URL with the short-code exists in the DB
+        if (urlService.getUrl(shortCode, false) != null){ // Check if the URL with the short-code exists in the DB
             if (url.getUrl() != null){ // Check if the URL-parameter is correct
                 urlService.updateUrl(shortCode, url.getUrl());
                 return ResponseEntity
                         .status(HttpStatus.OK)
-                        .body(urlService.getUrl(shortCode));
+                        .body(urlService.getUrl(shortCode, true));
             } else{
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
@@ -68,11 +68,25 @@ public class UrlController {
 
     @DeleteMapping("/shorten/{shortCode}") // DELETE
     public void DeleteURL(@PathVariable String shortCode, HttpServletResponse response){
-        if (urlService.getUrl(shortCode) != null){
+        if (urlService.getUrl(shortCode, true) != null){
             urlService.deleteUrl(shortCode);
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         } else{
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/shorten/{shortCode}/stats")
+    public ResponseEntity getURLStats(@PathVariable String shortCode){
+        Url url = urlService.getUrl(shortCode, true);
+        if (url != null){
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(url);
+        } else{
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("404 - Not found\nThe requested URL does not exist!");
         }
     }
 }
