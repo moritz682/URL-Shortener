@@ -18,11 +18,11 @@ public class UrlService {
         this.urlRepository = urlRepository;
     }
 
-    public void createNewShortURL(String url){
+    public Url createNewShortURL(String url) throws Exception{
         String shortCode;
         while (true){
             shortCode = UUID.randomUUID().toString().substring(0,6); // shortCode is limited to 6 chars
-            if(urlRepository.findUrlByShortCode(shortCode).isEmpty()){ // Check if shortCode is unique
+            if(urlRepository.findUrlByShortCode(shortCode) == null){ // Check if shortCode is unique
                 break;
             }
         }
@@ -35,5 +35,14 @@ public class UrlService {
                 0);
 
         urlRepository.save(urlEntity);
+
+        return urlEntity;
+    }
+
+    public Url getUrl(String shortCode){
+        Url url = urlRepository.findUrlByShortCode(shortCode); // Retrieve url from short-code from DB
+        urlRepository.incrementAccessCount(shortCode); // Increment access-count of url
+
+        return url;
     }
 }

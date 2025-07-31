@@ -6,11 +6,13 @@ import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface UrlRepository extends CrudRepository<Url, Long> {
 
     @Query("SELECT * FROM urls WHERE short_code = :shortCode")
-    List<Url> findUrlByShortCode(String shortCode);
+    Url findUrlByShortCode(String shortCode);
+
+    @Modifying
+    @Query("UPDATE urls SET access_count = access_count + 1 WHERE short_code = :shortCode")
+    void incrementAccessCount(String shortCode);
 }
