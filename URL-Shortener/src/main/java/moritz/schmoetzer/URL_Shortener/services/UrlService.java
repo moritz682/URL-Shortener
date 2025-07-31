@@ -49,4 +49,8 @@ public class UrlService {
     public void updateUrl(String shortCode, String url){
         urlRepository.updateUrlByShortCode(shortCode, url);
     }
+
+    public void deleteUrl(String shortCode){
+        urlRepository.deleteUrlByShortCode(shortCode);
+    }
 }

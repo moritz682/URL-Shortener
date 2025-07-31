@@ -1,5 +1,6 @@
 package moritz.schmoetzer.URL_Shortener.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import moritz.schmoetzer.URL_Shortener.dto.UrlInputDTO;
 import moritz.schmoetzer.URL_Shortener.models.Url;
 import moritz.schmoetzer.URL_Shortener.services.UrlService;
@@ -62,6 +63,16 @@ public class UrlController {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body("404 - Not found\nThe requested URL does not exist!");
+        }
+    }
+
+    @DeleteMapping("/shorten/{shortCode}") // DELETE
+    public void DeleteURL(@PathVariable String shortCode, HttpServletResponse response){
+        if (urlService.getUrl(shortCode) != null){
+            urlService.deleteUrl(shortCode);
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        } else{
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 }
